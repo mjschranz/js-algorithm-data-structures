@@ -101,19 +101,20 @@ class DoublyLinkedList {
     }
 
     get(position) {
-        if(position < 0 || position > this.length)  return null;
+        if(position < 0 || position >= this.length)  return null;
 
+        let i, node;
         if (position <= this.length / 2) {
-            let i = 0;
-            let node = this.head;
+            i = 0;
+            node = this.head;
 
             while (i < position) {
                 node = node.next;
                 i++;
             } 
         } else {
-            let i = this.length - 1;
-            let node = this.tail;
+            i = this.length - 1;
+            node = this.tail;
 
             while(i > position) {
                 node = node.prev;
@@ -126,13 +127,16 @@ class DoublyLinkedList {
 
     set(position, val) {
         const node = this.get(position);
-        if (node) node.val = val;
+        if (node)  {
+            node.val = val;
+            return true;
+        }
 
-        return node;
+        return false;
     }
 
     remove(position) {
-        if (position < 0 || position > this.length)  return false;
+        if (position < 0 || position > this.length)  return undefined;
         if (position === this.length - 1) return !!this.pop();
         if (position === 0) return !!this.shift();
         let removed = this.get(position);
