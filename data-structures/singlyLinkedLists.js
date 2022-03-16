@@ -1,153 +1,136 @@
-class Node {
-    constructor(val) {
+class Node{
+    constructor(val){
         this.val = val;
         this.next = null;
     }
 }
 
-class SinglyLinkedList {
-    constructor() {
+class SinglyLinkedList{
+    constructor(){
         this.head = null;
         this.tail = null;
         this.length = 0;
     }
-
-    push(val) {
-        const node = new Node(val);
-        if (!this.head) {
-            this.head = this.tail = node;
+    push(val){
+        var newNode = new Node(val);
+        if(!this.head){
+            this.head = newNode;
+            this.tail = this.head;
         } else {
-            this.tail.next = node;
-            this.tail = node;
+            this.tail.next = newNode;
+            this.tail = newNode;
         }
-
         this.length++;
         return this;
     }
-
-    pop() {
-        if (!this.tail) {
-            return undefined;
+    pop(){
+        if(!this.head) return undefined;
+        var current = this.head;
+        var newTail = current;
+        while(current.next){
+            newTail = current;
+            current = current.next;
         }
-
-        let temp = this.head;
-        let newTail = current;
-        while(temp.next) {
-            newTail = temp;
-            temp = temp.next;
-        }
-
         this.tail = newTail;
         this.tail.next = null;
         this.length--;
-
-        if (this.length === 0) this.head = this.tail = null;
-
-        return temp;
-    }
-
-    shift() {
-        if (!this.head) return undefined;
-
-        const oldHead = this.head;
-        this.head = this.head.next;
-        oldHead.next = null;
-        this.length--;
-
-        if(this.length === 0) {
+        if(this.length === 0){
+            this.head = null;
             this.tail = null;
         }
-
-        return oldHead;
+        return current;
     }
-
-    unshift(val) {
-        const node = new Node(val);
-        if (!this.head) {
-            this.head = this.tail = node;
-        } else {
-            node.next = this.head;
-            this.head = node;
+    shift(){
+        if(!this.head) return undefined;
+        var currentHead = this.head;
+        this.head = currentHead.next;
+        this.length--;
+        if(this.length === 0){
+            this.tail = null;
         }
-
+        return currentHead;
+    }
+    unshift(val){
+        var newNode = new Node(val);
+        if(!this.head) {
+            this.head = newNode;
+            this.tail = this.head;
+        }
+        newNode.next = this.head;
+        this.head = newNode;
         this.length++;
         return this;
     }
-
-    print() {
-        let current = this.head;
-        while(current) {
-            console.log(current.val);
+    get(index){
+        if(index < 0 || index >= this.length) return null;
+        var counter = 0;
+        var current = this.head;
+        while(counter !== index){
             current = current.next;
+            counter++;
         }
+        return current;
     }
-
-    insert(val, position) {
-        if (position < 0 || position > this.length)  return false;
-        if (position === this.length) return !!this.push(val);
-        if (position === 0) return !!this.unshift(val);
-        let node = new Node(val);
-        let prev = this.get(position - 1);
-        let temp = prev.next;
-
-        prev.next = node;
-        node.next = temp;
+    set(index, val){
+        var foundNode = this.get(index);
+        if(foundNode){
+            foundNode.val = val;
+            return true;
+        }
+        return false;
+    }
+    insert(index, val){
+        if(index < 0 || index > this.length) return false;
+        if(index === this.length) return !!this.push(val);
+        if(index === 0) return !!this.unshift(val);
+        
+        var newNode = new Node(val);
+        var prev = this.get(index - 1);
+        var temp = prev.next;
+        prev.next = newNode;
+        newNode.next = temp;
         this.length++;
-
         return true;
     }
-
-    get(position) {
-        if(position < 0 || position > this.length) {
-            return null;
-        }
-
-        let i = 0;
-        let node = this.head;
-
-        while (i < position) {
-            node = node.next;
-            i++;
-        }
-
-        return node;
-    }
-
-    set(position, val) {
-        const node = this.get(position);
-        if (node) node.val = val;
-
-        return node;
-    }
-
-    remove(position) {
-        if (position < 0 || position > this.length)  return false;
-        if (position === this.length - 1) return !!this.pop();
-        if (position === 0) return !!this.shift();
-        let prev = this.get(position - 1);
-        let removed = prev.next;
-        prev.next = prev.next.next;
+    remove(index){
+        if(index < 0 || index >= this.length) return undefined;
+        if(index === 0) return this.shift();
+        if(index === this.length - 1) return this.pop();
+        var previousNode = this.get(index - 1);
+        var removed = previousNode.next;
+        previousNode.next = removed.next;
         this.length--;
-
         return removed;
     }
-
-    reverse() {
-        let node = this.head;
-        this.head = this.tail;
-        this.tail = node;
-
-        let prev = null;
-        let next;
-        for(let i = 0; i < this.length; i++) {
-            next = node.next;
-            node.next = prev;
-            prev = node;
-            node = next;
+    reverse(){
+      var node = this.head;
+      this.head = this.tail;
+      this.tail = node;
+      var next;
+      var prev = null;
+      for(var i = 0; i < this.length; i++){
+        next = node.next;
+        node.next = prev;
+        prev = node;
+        node = next;
+      }
+      return this;
+    }
+    print(){
+        var arr = [];
+        var current = this.head
+        while(current){
+            arr.push(current.val)
+            current = current.next
         }
-
-        return this;
+        console.log(arr);
     }
 }
 
-const ll = new SinglyLinkedList();
+var list = new SinglyLinkedList()
+
+list.push(100)
+list.push(201)
+list.push(250)
+list.push(350)
+list.push(999)
